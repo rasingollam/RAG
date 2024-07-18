@@ -10,6 +10,10 @@ from langchain.prompts import ChatPromptTemplate
 from langchain import hub
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
+import warnings
+
+# Suppress DeprecationWarnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 def cosine_similarity(vec1, vec2):
     dot_product = np.dot(vec1, vec2)
@@ -129,9 +133,7 @@ def main():
     )
 
     result = rag_chain.invoke(question)
-    # Remove any warnings or additional text before the actual result
-    clean_result = result.split('---')[-1].strip()
-    print(clean_result)
+    print(result.strip())
 
 
 
