@@ -129,7 +129,9 @@ def main():
     )
 
     result = rag_chain.invoke(question)
-    print(result)
+    # Remove any warnings or additional text before the actual result
+    clean_result = result.split('---')[-1].strip()
+    print(clean_result)
 
 
 
