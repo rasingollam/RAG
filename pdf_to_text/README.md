@@ -16,7 +16,8 @@ pip install -r requirements.txt
 Run the script from the command line:
 
 ```
-python pdf_converter.py <pdf_directory>
+python pdf_converter.py
 ```
+Then copy and paste the PDF directory and press enter.
 
-The converted text files will be saved in a new directory inside the main PDF to text directory.
+The converted text files will be saved in a new directory inside the PDF directory.
