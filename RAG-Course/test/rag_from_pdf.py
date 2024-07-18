@@ -2,6 +2,7 @@ import tiktoken
 from langchain_openai import OpenAIEmbeddings
 import numpy as np
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.schema import Document
 
 def cosine_similarity(vec1, vec2):
     dot_product = np.dot(vec1, vec2)
@@ -55,11 +56,19 @@ def main():
     
     ###### SPLITTER ######
     
+    # Create a Document object
+    doc = Document(page_content=document)
+
     # Split
     text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(chunk_size=300, chunk_overlap=50)
     # Make splits
-    splits = text_splitter.split_documents(document)
-    print(splits)
+    splits = text_splitter.split_documents([doc])
+    
+    # Print the splits
+    for i, split in enumerate(splits):
+        print(f"Split {i + 1}:")
+        print(split.page_content)
+        print("---")
 
 if __name__ == "__main__":
     main()
