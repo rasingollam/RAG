@@ -4,20 +4,12 @@ Welcome to my RAG projects repository! This collection showcases various impleme
 
 ## Projects Overview
 
-### 1. pdf_to_text
-
-A utility project that converts PDF files to text format. This tool is essential for preprocessing documents for use in RAG systems.
-
-### 2. ChatWithPDF
+### 1. ChatWithPDF
 
 An interactive application that allows users to chat with PDF documents using a RAG-based question answering system.
 
 ## Project Structure
 
-- `pdf_to_text/`: PDF to text conversion utility
-  - `data/`: Stores PDF files and converted text files
-  - `pdf_converter.py`: Main script for PDF conversion
-  - `requirements.txt`: Dependencies for the PDF converter
 - `ChatWithPDF/`: Interactive PDF chat application
   - `src/`: Source code for the ChatWithPDF application
     - `main.py`: Main application entry point
