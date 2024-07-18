@@ -45,7 +45,7 @@ class RAGQuestionAnswerer:
         """
         self.prompt = ChatPromptTemplate.from_template(template)
 
-        self.llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+        self.llm = ChatOpenAI(model_name="gpt-4o", temperature=0)
         self.rag_chain = (
             {"context": self.retriever, "question": RunnablePassthrough()}
             | self.prompt
