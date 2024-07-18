@@ -30,5 +30,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 If you have any questions or want to reach out, please open an issue in this repository.
 
 Thank you for visiting my RAG projects repository!
-
-test
