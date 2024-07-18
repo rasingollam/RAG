@@ -35,15 +35,21 @@ def convert_pdf_to_text(pdf_path, output_dir):
 
 def main():
     while True:
-        pdf_directory = input("Enter the path to the directory containing PDF files: ").strip()
-        if os.path.isdir(pdf_directory):
+        pdf_path = input("Enter the path to the PDF file or directory containing PDF files: ").strip()
+        if os.path.isdir(pdf_path) or (os.path.isfile(pdf_path) and pdf_path.lower().endswith('.pdf')):
             break
         else:
-            print(f"Error: '{pdf_directory}' is not a valid directory. Please try again.")
+            print(f"Error: '{pdf_path}' is not a valid PDF file or directory. Please try again.")
 
-    output_directory = os.path.join(os.path.dirname(pdf_directory), "converted_text_files")
+    if os.path.isdir(pdf_path):
+        pdf_directory = pdf_path
+        output_directory = os.path.join(os.path.dirname(pdf_directory), "converted_text_files")
+        pdf_files = [f for f in os.listdir(pdf_directory) if f.lower().endswith('.pdf')]
+    else:
+        pdf_directory = os.path.dirname(pdf_path)
+        output_directory = os.path.join(pdf_directory, "converted_text_files")
+        pdf_files = [os.path.basename(pdf_path)]
 
-    pdf_files = [f for f in os.listdir(pdf_directory) if f.lower().endswith('.pdf')]
     total_files = len(pdf_files)
 
     if total_files == 0:
@@ -52,9 +58,12 @@ def main():
         print(f"Found {total_files} PDF file(s) to convert.")
 
         for index, filename in enumerate(pdf_files, start=1):
-            pdf_path = os.path.join(pdf_directory, filename)
+            if os.path.isdir(pdf_path):
+                full_pdf_path = os.path.join(pdf_directory, filename)
+            else:
+                full_pdf_path = pdf_path
             print(f"Converting file {index} of {total_files}: {filename}")
-            convert_pdf_to_text(pdf_path, output_directory)
+            convert_pdf_to_text(full_pdf_path, output_directory)
 
         print("Conversion process completed.")
         print(f"Converted text files can be found in: {output_directory}")
