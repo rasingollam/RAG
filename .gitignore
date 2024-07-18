@@ -1,4 +1,11 @@
-.venv
+# Ignore all directories
+*/
+
+# But don't ignore these specific files
+!.gitignore
+!README.md
+!requirements.txt
+
+# Ignore specific files
 .env
 .aider*
-RAG-Course/
