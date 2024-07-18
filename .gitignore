@@ -1,5 +1,6 @@
 # Ignore all directories
 */
+**/pdf_to_text.py/
 
 # But don't ignore these specific files
 !.gitignore
