@@ -7,6 +7,7 @@ Welcome to my RAG projects repository! This collection showcases various impleme
 ### 1. rag-from-scratch
 
 This project contains the basics of RAG implementation, developed as part of a comprehensive course on building RAG systems from the ground up. It covers fundamental concepts and practical implementations of RAG techniques.
+Following is the git repository for the course: https://github.com/langchain-ai/rag-from-scratch
 
 ### 2. pdf-to-text
 
