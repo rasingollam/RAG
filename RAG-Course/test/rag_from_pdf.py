@@ -3,6 +3,13 @@ from langchain_openai import OpenAIEmbeddings
 import numpy as np
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import Document
+from langchain_openai import OpenAIEmbeddings
+from langchain_community.vectorstores import Chroma
+from langchain_openai import ChatOpenAI
+from langchain.prompts import ChatPromptTemplate
+from langchain import hub
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnablePassthrough
 
 def cosine_similarity(vec1, vec2):
     dot_product = np.dot(vec1, vec2)
@@ -30,15 +37,19 @@ def read_text_file(file_path):
     
 
 def main():
+    
+###### PART 01 : INDEXING ######
+## ----------------------------------------------------------------------------------------------------------------
+    
     # Path to the text file
-    text_file_path = "pdf_to_text/data/converted_text_files/Additional_Attendee_payment_-_1147.txt"
+    text_file_path = "pdf_to_text\\data\\converted_text_files\\508_1716287433658.txt"
     
     ###### DOCUMENT ######
     
     document = read_text_file(text_file_path)
     # doc_tokens = num_tokens_from_string(document, "cl100k_base")
     # print(doc_tokens)
-    question = "What is the content of the text?"
+    question = "What is the company?"
     # question_tokens = num_tokens_from_string(question, "cl100k_base")
     # print(question_tokens)
     
@@ -52,7 +63,7 @@ def main():
     ###### COSINE SIMILARITY ######
     
     similarity = cosine_similarity(query_result, document_result)
-    print("Cosine Similarity:", similarity)
+    # print("Cosine Similarity:", similarity)
     
     ###### SPLITTER ######
     
@@ -64,11 +75,64 @@ def main():
     # Make splits
     splits = text_splitter.split_documents([doc])
     
-    # Print the splits
-    for i, split in enumerate(splits):
-        print(f"Split {i + 1}:")
-        print(split.page_content)
-        print("---")
+    # ###### VECTOR STORES ######
+    # vectorstore = Chroma.from_documents(documents=splits, 
+    #                                 embedding=OpenAIEmbeddings())
+
+    # retriever = vectorstore.as_retriever()
+    # print(retriever)
+    
+###### PART 02 : RETRIEVAL ######
+## ----------------------------------------------------------------------------------------------------------------
+    vectorstore = Chroma.from_documents(documents=splits, 
+                                    embedding=OpenAIEmbeddings())
+
+
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
+    # print(retriever)
+    
+    docs = retriever.get_relevant_documents(question)
+    # print(len(docs))    
+
+###### PART 03 : GENARATION ######
+## ----------------------------------------------------------------------------------------------------------------
+
+    # Prompt
+    template = """Answer the question based only on the following context:
+    {context}
+
+    Question: {question}
+    """
+
+    prompt = ChatPromptTemplate.from_template(template)
+    # print(prompt)
+    
+    # LLM
+    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+
+    # Chain
+    chain = prompt | llm
+    
+    # Run
+    chain.invoke({"context":docs,"question":question})
+
+    prompt_hub_rag = hub.pull("rlm/rag-prompt")
+    # print(prompt_hub_rag)
+
+    ###### VECTOR STORES ######
+    
+    rag_chain = (
+        {"context": retriever, "question": RunnablePassthrough()}
+        | prompt
+        | llm
+        | StrOutputParser()
+    )
+
+    result = rag_chain.invoke(question)
+    print(result)
+
+
+
 
 if __name__ == "__main__":
     main()
