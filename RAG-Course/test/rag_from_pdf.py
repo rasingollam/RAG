@@ -43,17 +43,17 @@ def main():
     print("Text file content:")
     print(text_content)
     
-    documents = load_text(text_file_path)
-    texts = split_text(documents)
-    vectorstore = create_vector_store(texts)
-    qa_chain = setup_qa_chain(vectorstore)
+    # documents = load_text(text_file_path)
+    # texts = split_text(documents)
+    # vectorstore = create_vector_store(texts)
+    # qa_chain = setup_qa_chain(vectorstore)
     
-    while True:
-        query = input("Enter your question (or 'quit' to exit): ")
-        if query.lower() == 'quit':
-            break
-        result = qa_chain.run(query)
-        print(f"Answer: {result}")
+    # while True:
+    #     query = input("Enter your question (or 'quit' to exit): ")
+    #     if query.lower() == 'quit':
+    #         break
+    #     result = qa_chain.run(query)
+    #     print(f"Answer: {result}")
 
 if __name__ == "__main__":
     main()
