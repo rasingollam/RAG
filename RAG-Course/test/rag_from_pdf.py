@@ -123,7 +123,7 @@ def main():
     prompt_hub_rag = hub.pull("rlm/rag-prompt")
     # print(prompt_hub_rag)
 
-    ###### VECTOR STORES ######
+    ###### RAG CHAINS ######
     
     rag_chain = (
         {"context": retriever, "question": RunnablePassthrough()}
