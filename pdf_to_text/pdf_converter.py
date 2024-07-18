@@ -6,7 +6,7 @@ def sanitize_filename(filename):
     # Remove invalid characters and replace spaces with underscores
     return re.sub(r'[<>:"/\\|?*]', '', filename).replace(' ', '_')
 
-def convert_pdf_to_text(pdf_path, output_dir):
+def convert_pdf_to_text(pdf_path, output_dir, total_pages):
     try:
         # Create output directory if it doesn't exist
         os.makedirs(output_dir, exist_ok=True)
@@ -17,8 +17,10 @@ def convert_pdf_to_text(pdf_path, output_dir):
             
             # Extract text from each page
             text = ''
-            for page in pdf.pages:
+            for i, page in enumerate(pdf.pages, 1):
                 text += page.extract_text()
+                percentage = (i / total_pages) * 100
+                print(f"\rConverting: {percentage:.1f}%", end="", flush=True)
 
         # Generate sanitized output file name
         base_name = os.path.splitext(os.path.basename(pdf_path))[0]
@@ -29,9 +31,9 @@ def convert_pdf_to_text(pdf_path, output_dir):
         with open(output_path, 'w', encoding='utf-8') as output_file:
             output_file.write(text)
 
-        print(f"Converted {pdf_path} to {output_path}")
+        print(f"\nConverted {pdf_path} to {output_path}")
     except Exception as e:
-        print(f"Error converting {pdf_path}: {str(e)}")
+        print(f"\nError converting {pdf_path}: {str(e)}")
 
 def main():
     while True:
@@ -63,7 +65,13 @@ def main():
             else:
                 full_pdf_path = pdf_path
             print(f"Converting file {index} of {total_files}: {filename}")
-            convert_pdf_to_text(full_pdf_path, output_directory)
+            
+            # Get total number of pages
+            with open(full_pdf_path, 'rb') as file:
+                pdf = PdfReader(file)
+                total_pages = len(pdf.pages)
+            
+            convert_pdf_to_text(full_pdf_path, output_directory, total_pages)
 
         print("Conversion process completed.")
         print(f"Converted text files can be found in: {output_directory}")
